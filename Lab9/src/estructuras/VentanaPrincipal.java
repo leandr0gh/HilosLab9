@@ -24,7 +24,7 @@ public class VentanaPrincipal extends JFrame {
     private JLabel[] lblRepartidores;
     private JButton btnIniciar, btnPausar, btnReanudar, btnDetener, btnReiniciar, btnStats;
     
-    private Timer timerActualizacion;
+    private Timer timerActualizacion = new Timer(200, e -> actualizarGUI());
     
     public VentanaPrincipal(){
         setTitle("Sistema de Simulacion de Centro Logistico");
@@ -33,6 +33,7 @@ public class VentanaPrincipal extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
         
+        configurarTimerRefresco();
         inicializarComponentes();
 
     }
