@@ -7,8 +7,8 @@ package estructuras;
  */
 public class Nodo<T> {
     
-    private T dato;
-    private Nodo<T> siguiente;
+    public T dato;
+    public Nodo<T> siguiente;
 
     public Nodo(T dato) {
         this.dato = dato;

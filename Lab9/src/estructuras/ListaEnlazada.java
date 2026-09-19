@@ -5,119 +5,80 @@ package estructuras;
  * @author Leandro
  */
 public class ListaEnlazada<T> {
-
     private Nodo<T> cabeza;
-    private int tamano;
+    private Nodo<T> cola;
+    private int tamaño;
 
     public ListaEnlazada() {
-        cabeza = null;
-        tamano = 0;
+        this.cabeza = null;
+        this.cola = null;
+        this.tamaño = 0;
     }
 
     public void agregar(T dato) {
         Nodo<T> nuevo = new Nodo<>(dato);
-
-        if (cabeza == null) {
+        if (estaVacia()) {
             cabeza = nuevo;
+            cola = nuevo;
         } else {
-            Nodo<T> actual = cabeza;
-
-            while (actual.getSiguiente() != null) {
-                actual = actual.getSiguiente();
-            }
-
-            actual.setSiguiente(nuevo);
+            cola.siguiente = nuevo;
+            cola = nuevo;
         }
-
-        tamano++;
+        tamaño++;
     }
 
-    public int tamano() {
-        return tamano;
-    }
-
-    public boolean estaVacia() {
-        return cabeza == null;
-    }
-
-    public T obtener(int indice) {
-
-        if (indice < 0 || indice >= tamano) {
-            throw new IndexOutOfBoundsException(
-                    "Índice fuera de rango: " + indice
-            );
+    public T eliminarPrimero() {
+        if (estaVacia()) return null;
+        
+        T dato = cabeza.dato;
+        cabeza = cabeza.siguiente;
+        tamaño--;
+        
+        if (estaVacia()) {
+            cola = null;
         }
-
-        Nodo<T> actual = cabeza;
-
-        for (int i = 0; i < indice; i++) {
-            actual = actual.getSiguiente();
-        }
-
-        return actual.getDato();
+        return dato;
     }
 
     public boolean eliminar(T dato) {
+        if (estaVacia()) return false;
 
-        if (cabeza == null) {
-            return false;
-        }
-
-
-        if (cabeza.getDato().equals(dato)) {
-            cabeza = cabeza.getSiguiente();
-            tamano--;
+        if (cabeza.dato.equals(dato)) {
+            eliminarPrimero();
             return true;
         }
 
         Nodo<T> actual = cabeza;
-
-        while (actual.getSiguiente() != null) {
-
-            if (actual.getSiguiente().getDato().equals(dato)) {
-
-                actual.setSiguiente(
-                        actual.getSiguiente().getSiguiente()
-                );
-
-                tamano--;
-                return true;
-            }
-
-            actual = actual.getSiguiente();
+        while (actual.siguiente != null && !actual.siguiente.dato.equals(dato)) {
+            actual = actual.siguiente;
         }
 
+        if (actual.siguiente != null) {
+            if (actual.siguiente == cola) {
+                cola = actual;
+            }
+            actual.siguiente = actual.siguiente.siguiente;
+            tamaño--;
+            return true;
+        }
         return false;
     }
 
-    public T buscar(T dato) {
-
+    public T obtener(int indice) {
+        if (indice < 0 || indice >= tamaño) return null;
         Nodo<T> actual = cabeza;
-
-        while (actual != null) {
-
-            if (actual.getDato().equals(dato)) {
-                return actual.getDato();
-            }
-
-            actual = actual.getSiguiente();
+        for (int i = 0; i < indice; i++) {
+            actual = actual.siguiente;
         }
-
-        return null;
+        return actual.dato;
     }
 
-    public void limpiar() {
+    public int getTamaño() { return tamaño; }
+    public boolean estaVacia() { return tamaño == 0; }
+    
+    public void vaciar() {
         cabeza = null;
-        tamano = 0;
-    }
-
-    public void recorrer() {
-
-        Nodo<T> actual = cabeza;
-
-        while (actual != null) {
-            System.out.println(actual.getDato());
-            actual = actual.getSiguiente();
-        }
+        cola = null;
+        tamaño = 0;
     }
 }
